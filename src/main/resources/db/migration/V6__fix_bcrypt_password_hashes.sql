@@ -11,3 +11,4 @@ UPDATE users SET password_hash = '$2a$12$pwquTJn68w0QZSpydH7oreTzCQe4YZC5aRY0o3v
 UPDATE users SET password_hash = '$2a$12$Jb8ZpCwUUaNqr/u5rHjeG.1wzGPHEoE3vk7aiQKwFpAlJmBuAeqke' WHERE username = 'hod.it@tecnrt.org';
 UPDATE users SET password_hash = '$2a$12$cdGfJgax/sQ8VMVEXGiN6OnjI9BoikQ/1ipH5CFCoiR/P.Q63KEMm' WHERE username = 'hod.ece@tecnrt.org';
 UPDATE users SET password_hash = '$2a$12$yroDi3XK31nEeWCf1vP0Iu79zVbmMahyHAPjtRx/vCmBF..4p1lhC' WHERE username = 'hod.eee@tecnrt.org';
+
