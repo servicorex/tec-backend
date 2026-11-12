@@ -8,6 +8,7 @@ import com.tecnrt.modules.attendance.entity.AttendanceSummary;
 import com.tecnrt.modules.attendance.repository.AttendanceSummaryRepository;
 import com.tecnrt.modules.auth.entity.User;
 import com.tecnrt.modules.auth.repository.UserRepository;
+import com.tecnrt.modules.hod.entity.AuditLog;
 import com.tecnrt.modules.hod.entity.Faculty;
 import com.tecnrt.modules.hod.entity.HodAssignment;
 import com.tecnrt.modules.hod.repository.AuditLogRepository;
@@ -155,6 +156,29 @@ public class AdminService {
 
         HodAssignment assignment = new HodAssignment(savedUser, deptId);
         hodAssignmentRepository.save(assignment);
+    }
+
+    @Transactional
+    public void resetUserPassword(String username, String newPassword) {
+        String cleanUser = username.trim();
+        User user = userRepository.findByUsernameIgnoreCase(cleanUser)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with identifier: " + cleanUser));
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordChanged(false); // require user to know/change or authenticate directly
+        user.setTokenVersion(user.getTokenVersion() + 1); // invalidate any previously issued sessions
+        userRepository.save(user);
+
+        AuditLog log = new AuditLog(
+                user,
+                "PRINCIPAL",
+                "ADMIN_RESET_PASSWORD",
+                "Administrator forcibly reset password for user: " + cleanUser + " (" + user.getRole() + ")",
+                "USER",
+                cleanUser,
+                "INTERNAL"
+        );
+        auditLogRepository.save(log);
     }
 }
 

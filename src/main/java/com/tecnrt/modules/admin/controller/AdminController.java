@@ -49,5 +49,15 @@ public class AdminController {
                 "message", "HOD successfully assigned for department " + request.departmentId()
         ));
     }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "Admin Reset Password", description = "Allows Administrator to reset password for any student or HOD without current password")
+    public ResponseEntity<Map<String, Object>> resetPassword(@Valid @RequestBody com.tecnrt.modules.admin.dto.AdminResetPasswordRequest request) {
+        adminService.resetUserPassword(request.username(), request.newPassword());
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Password for user " + request.username() + " has been reset successfully."
+        ));
+    }
 }
 
