@@ -1,5 +1,6 @@
 server:
   port: ${PORT:8080}
+  shutdown: graceful
   error:
     include-message: never
     include-binding-errors: never
@@ -9,6 +10,8 @@ server:
 spring:
   application:
     name: tec-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/tec_db}
@@ -16,8 +19,8 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 15
-      minimum-idle: 5
+      maximum-pool-size: 8
+      minimum-idle: 2
       idle-timeout: 300000
       connection-timeout: 20000
       max-lifetime: 1200000
@@ -40,6 +43,17 @@ spring:
     baseline-on-migrate: true
     locations: classpath:db/migration
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+
 app:
   jwt:
     secret: ${JWT_SECRET:4c65634e52542d53757065725365637265744b65792d323032362d5445432d4261636b656e64}
@@ -54,4 +68,21 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: method
+
+---
+# Production Profile: Enforces strict non-fallback secrets and production guarantees
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+
 

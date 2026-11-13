@@ -11,3 +11,4 @@ public record AdminResetPasswordRequest(
         @Size(min = 6, message = "New password must be at least 6 characters")
         String newPassword
 ) {}
+
