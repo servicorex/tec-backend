@@ -26,7 +26,7 @@ EXPOSE 8080
 
 # Environment defaults
 ENV PORT=8080 \
-    JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC"
+    JAVA_OPTS="-XX:InitialRAMPercentage=40.0 -XX:MaxRAMPercentage=75.0 -XX:+UseG1GC -XX:+UseStringDeduplication"
 
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 
